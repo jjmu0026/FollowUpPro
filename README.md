@@ -1,8 +1,15 @@
 # FollowUpPro
 
-A smart, stress-free job application tracking and follow-up assistant that helps you manage your job search process with intelligent timing and AI-powered email generation.
+A smart, stress-free job application tracking and follow-up assistant that helps you manage your job search process with intelligent timing and AI-powered email generation. **Now with multi-user support and secure authentication!**
 
 ## 🚀 Features
+
+### 🔐 Secure Multi-User Authentication
+- **User Registration & Login**: Secure email/password authentication
+- **Google OAuth**: One-click sign-in with Google
+- **Session Management**: Persistent login across browser sessions
+- **Data Isolation**: Each user's data is completely private and secure
+- **Account Management**: Users can sign out and manage their accounts
 
 ### 📊 Smart Job Tracking
 - **Comprehensive Application Management**: Track all your job applications in one place
@@ -42,6 +49,7 @@ A smart, stress-free job application tracking and follow-up assistant that helps
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth with Row Level Security
 - **Deployment**: Vite build system
 
 ## 📦 Installation
@@ -49,6 +57,7 @@ A smart, stress-free job application tracking and follow-up assistant that helps
 ### Prerequisites
 - Node.js (v18 or higher)
 - npm or yarn
+- Supabase account (free tier available)
 
 ### Setup Instructions
 
@@ -63,31 +72,36 @@ A smart, stress-free job application tracking and follow-up assistant that helps
    npm install
    ```
 
-3. **Set up Supabase (Optional - for data persistence)**
+3. **Set up Supabase (Required for multi-user support)**
    - Create a Supabase project at [supabase.com](https://supabase.com)
-   - Create a `jobs` table with the following schema:
-     ```sql
-     CREATE TABLE jobs (
-       id SERIAL PRIMARY KEY,
-       company TEXT NOT NULL,
-       role TEXT NOT NULL,
-       status TEXT DEFAULT 'applied',
-       applied_at DATE,
-       last_contacted_at DATE,
-       recruiter_email TEXT,
-       notes TEXT,
-       created_at TIMESTAMP DEFAULT NOW()
-     );
-     ```
+   - Run the database setup script from `database-setup.sql`
+   - Enable authentication in your Supabase dashboard
    - Update the Supabase credentials in `src/supabaseClient.js`
 
-4. **Start the development server**
+4. **Configure Environment Variables**
+   Create a `.env` file in the project root:
+   ```env
+   VITE_SUPABASE_URL=https://vfoazaxtdqgjyqrwbsoy.supabase.co
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   ```
+
+5. **Start the development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to `http://localhost:5173`
+
+## 🔐 Multi-User Setup
+
+For detailed instructions on setting up multi-user support, see [MULTI-USER-SETUP.md](./MULTI-USER-SETUP.md).
+
+### Quick Multi-User Setup:
+1. **Enable Authentication** in Supabase dashboard
+2. **Run Database Setup** script (`database-setup.sql`)
+3. **Configure OAuth** (optional - Google, GitHub, etc.)
+4. **Test Authentication** flow
 
 ## 🌐 Deployment
 
@@ -114,7 +128,7 @@ Vercel is the easiest option for React/Vite applications with automatic deployme
    - Set output directory: `dist`
    - Set install command: `npm install`
 
-4. **Environment Variables** (if using Supabase):
+4. **Environment Variables** (Required for Supabase):
    - Go to your Vercel dashboard
    - Add environment variables for Supabase URL and key
 
@@ -228,6 +242,12 @@ Most platforms support custom domains:
 
 ## 🎯 Usage Guide
 
+### Getting Started
+1. **Sign Up**: Create an account with email/password or Google
+2. **Verify Email**: Check your email for confirmation (if enabled)
+3. **Add Your First Job**: Start tracking your job applications
+4. **Get Follow-up Reminders**: Receive smart notifications
+
 ### Adding a New Job Application
 1. Click the "Add Job" button
 2. Fill in the required information:
@@ -257,6 +277,11 @@ Most platforms support custom domains:
 - See follow-up suggestions highlighted at the top
 - Monitor your application status distribution
 
+### User Management
+- **Profile**: See your email in the header
+- **Sign Out**: Click the sign out button to log out
+- **Data Privacy**: Your data is completely isolated from other users
+
 ## 🔧 Development
 
 ### Available Scripts
@@ -264,11 +289,13 @@ Most platforms support custom domains:
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
+- `npm run deploy` - Deploy to GitHub Pages
 
 ### Project Structure
 ```
 src/
 ├── components/
+│   ├── Auth.jsx              # Authentication component
 │   ├── DashboardStats.jsx    # Dashboard analytics component
 │   ├── JobForm.jsx          # Add/edit job form
 │   ├── JobList.jsx          # Job applications list
@@ -278,6 +305,14 @@ src/
 ├── supabaseClient.js        # Supabase configuration
 └── index.css               # Global styles
 ```
+
+## 🔒 Security Features
+
+- **Row Level Security (RLS)**: Users can only access their own data
+- **Secure Authentication**: Email/password and OAuth support
+- **Data Isolation**: Complete separation between users
+- **Automatic Cleanup**: Data is deleted when users are removed
+- **HTTPS Only**: All communications are encrypted
 
 ## 🤝 Contributing
 
@@ -295,7 +330,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Built with React and Vite for fast development
 - Styled with Tailwind CSS for beautiful, responsive design
-- Powered by Supabase for reliable data storage
+- Powered by Supabase for reliable data storage and authentication
 - Icons provided by Lucide React
 
 ## 📞 Support
