@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Edit, Trash2, Mail, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import JobForm from './JobForm'
 
-const JobList = ({ jobs, onUpdate, onDelete, onSelect }) => {
+const JobList = ({ jobs, onUpdate, onDelete, onSelect, onAddJob }) => {
   const [editingJob, setEditingJob] = useState(null)
 
   const getStatusIcon = (status) => {
@@ -60,7 +60,13 @@ const JobList = ({ jobs, onUpdate, onDelete, onSelect }) => {
         <div className="text-center py-12">
           <Mail className="mx-auto text-gray-400 mb-4" size={48} />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs yet</h3>
-          <p className="text-gray-600">Add your first job application to get started</p>
+          <p className="text-gray-600 mb-6">Add your first job application to get started</p>
+          <button
+            onClick={onAddJob}
+            className="btn-primary"
+          >
+            Add Your First Job
+          </button>
         </div>
       </div>
     )
@@ -68,7 +74,15 @@ const JobList = ({ jobs, onUpdate, onDelete, onSelect }) => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Job Applications</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Your Job Applications</h2>
+        <button
+          onClick={onAddJob}
+          className="btn-primary"
+        >
+          Add Job
+        </button>
+      </div>
       
       {jobs.map(job => (
         <div key={job.id} className="card">

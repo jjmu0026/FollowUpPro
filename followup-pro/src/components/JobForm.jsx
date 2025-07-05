@@ -1,19 +1,59 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
 const JobForm = ({ onSubmit, onCancel, initialData = null }) => {
-  const [formData, setFormData] = useState({
-    company: initialData?.company || '',
-    role: initialData?.role || '',
-    status: initialData?.status || 'applied',
-    appliedAt: initialData?.appliedAt ? new Date(initialData.appliedAt).toISOString().split('T')[0] : '',
-    lastContactedAt: initialData?.lastContactedAt ? new Date(initialData.lastContactedAt).toISOString().split('T')[0] : '',
-    recruiterEmail: initialData?.recruiterEmail || '',
-    notes: initialData?.notes || ''
-  })
+  // Load saved draft from localStorage if no initial data
+  const getInitialFormData = () => {
+    if (initialData) {
+      return {
+        company: initialData.company || '',
+        role: initialData.role || '',
+        status: initialData.status || 'applied',
+        appliedAt: initialData.appliedAt ? new Date(initialData.appliedAt).toISOString().split('T')[0] : '',
+        lastContactedAt: initialData.lastContactedAt ? new Date(initialData.lastContactedAt).toISOString().split('T')[0] : '',
+        recruiterEmail: initialData.recruiterEmail || '',
+        notes: initialData.notes || ''
+      }
+    } else {
+      const savedDraft = localStorage.getItem('jobFormDraft')
+      if (savedDraft) {
+        try {
+          return JSON.parse(savedDraft)
+        } catch (e) {
+          console.error('Error parsing saved draft:', e)
+        }
+      }
+      return {
+        company: '',
+        role: '',
+        status: 'applied',
+        appliedAt: '',
+        lastContactedAt: '',
+        recruiterEmail: '',
+        notes: ''
+      }
+    }
+  }
+
+  const [formData, setFormData] = useState(getInitialFormData)
+
+  // Auto-save draft to localStorage
+  useEffect(() => {
+    if (!initialData) { // Only auto-save for new jobs, not edits
+      const timeoutId = setTimeout(() => {
+        localStorage.setItem('jobFormDraft', JSON.stringify(formData))
+      }, 1000) // Save after 1 second of no changes
+      
+      return () => clearTimeout(timeoutId)
+    }
+  }, [formData, initialData])
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // Clear the draft when submitting
+    if (!initialData) {
+      localStorage.removeItem('jobFormDraft')
+    }
     onSubmit({
       ...formData,
       id: initialData?.id,
